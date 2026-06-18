@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORBIT — Stream the Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- STAR CANVAS -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav__logo" data-view="home">
+      <span class="nav__logo-badge">
+        <span class="nav__logo-ring"></span>
+        <span class="nav__logo-ring nav__logo-ring--2"></span>
+        <span class="nav__logo-text">ORBIT</span>
+      </span>
+    </a>
+    <div class="nav__links">
+      <a href="#" class="nav__link active" data-view="home">Home</a>
+      <a href="#" class="nav__link" data-view="films">Films</a>
+      <a href="#" class="nav__link" data-view="series">Series</a>
+      <a href="#" class="nav__link" data-view="new">New</a>
+      <a href="#" class="nav__link" data-view="top10">Top 10</a>
+    </div>
+    <div class="nav__actions">
+      <button class="btn btn--get-started" id="getStartedBtn">Get Started</button>
+      <!-- shown when signed in -->
+      <div class="nav__user" id="navUser" hidden>
+        <button class="nav__avatar" id="navAvatarBtn" aria-label="Account menu" aria-expanded="false">
+          <span id="navAvatarInitial"></span>
+        </button>
+        <div class="nav__user-dropdown" id="navUserDropdown" aria-hidden="true">
+          <div class="nav__user-info">
+            <span class="nav__user-name" id="navUserName"></span>
+            <span class="nav__user-email" id="navUserEmail"></span>
+          </div>
+          <hr class="nav__user-divider" />
+          <button class="nav__user-item">My Watchlist</button>
+          <button class="nav__user-item">Account Settings</button>
+          <hr class="nav__user-divider" />
+          <button class="nav__user-item nav__user-item--danger" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+    <button class="nav__hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" data-view="home">Home</a>
+    <a href="#" data-view="films">Films</a>
+    <a href="#" data-view="series">Series</a>
+    <a href="#" data-view="new">New</a>
+    <a href="#" data-view="top10">Top 10</a>
+    <div class="mobile-menu__actions">
+      <button class="btn btn--get-started" id="mobileGetStartedBtn">Get Started</button>
+      <!-- shown when signed in -->
+      <div class="mobile-menu__user" id="mobileUser" hidden>
+        <div class="mobile-menu__user-info">
+          <div class="mobile-menu__avatar" id="mobileAvatarInitial"></div>
+          <div>
+            <span class="mobile-menu__user-name" id="mobileUserName"></span>
+            <span class="mobile-menu__user-email" id="mobileUserEmail"></span>
+          </div>
+        </div>
+        <button class="btn btn--ghost mobile-menu__signout" id="mobileSignOutBtn">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img class="hero__bg-img" id="heroBg" src="" alt="" />
+      <div class="hero__vignette"></div>
+      <div class="hero__gradient"></div>
+    </div>
+
+    <div class="hero__content" id="heroContent">
+      <div class="hero__badge" id="heroBadge">Featured Premiere</div>
+      <h1 class="hero__title" id="heroTitle"></h1>
+      <div class="hero__meta" id="heroMeta"></div>
+      <p class="hero__desc" id="heroDesc"></p>
+      <div class="hero__cta">
+        <button class="btn btn--play" id="heroPlayBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><polygon points="6,3 20,12 6,21"/></svg>
+          Play Now
+        </button>
+        <button class="btn btn--info" id="heroInfoBtn">More Info</button>
+      </div>
+    </div>
+
+    <!-- Hero dots -->
+    <div class="hero__dots" id="heroDots"></div>
+
+    <div class="hero__scroll">
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+
+    <section class="row" data-animate id="row-top10">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Globally Trending</span>
+          <h2 class="row__title">Top 10 on Orbit</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="top10Track"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="row" data-animate id="row-new">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Fresh on the Platform</span>
+          <h2 class="row__title">New Releases</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="newTrack"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="row" data-animate id="row-films">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Films</span>
+          <h2 class="row__title">Cinema, Reimagined</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="filmsTrack"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="row" data-animate id="row-series">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Series</span>
+          <h2 class="row__title">Worlds to Inhabit</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="seriesTrack"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="row" data-animate id="row-scifi">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Genre · Sci-Fi</span>
+          <h2 class="row__title">Science &amp; Speculation</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="scifiTrack"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="row" data-animate id="row-crime">
+      <div class="row__header">
+        <div class="row__header-left">
+          <span class="row__eyebrow">Genre · Crime</span>
+          <h2 class="row__title">High Stakes Crime</h2>
+        </div>
+        <a href="#" class="row__see-all">See All →</a>
+      </div>
+      <div class="row__wrap">
+        <button class="row__arrow row__arrow--left" aria-label="Scroll left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+        <div class="row__track" id="crimeTrack"></div>
+        <button class="row__arrow row__arrow--right" aria-label="Scroll right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg></button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BROWSE PAGE (Films / Series / New / Top 10) -->
+  <div class="browse" id="browsePage" aria-hidden="true">
+    <div class="browse__header">
+      <div class="browse__header-left">
+        <span class="browse__eyebrow" id="browseEyebrow"></span>
+        <h1 class="browse__title" id="browseTitle"></h1>
+      </div>
+      <div class="browse__controls">
+        <div class="browse__sort">
+          <label for="browseSort" class="sr-only">Sort by</label>
+          <select id="browseSort" class="browse__select">
+            <option value="default">Default</option>
+            <option value="rating">Top Rated</option>
+            <option value="year-desc">Newest First</option>
+            <option value="year-asc">Oldest First</option>
+            <option value="az">A → Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="browse__grid" id="browseGrid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="footer__logo">
+          <span class="footer__logo-badge">
+            <span class="footer__logo-ring"></span>
+            <span class="footer__logo-text">ORBIT</span>
+          </span>
+        </span>
+        <p>A global media platform for cinema that crosses borders.<br>Streaming stories worth orbiting back to.</p>
+        <div class="footer__socials">
+          <a href="#" aria-label="Twitter" class="footer__social">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="footer__social">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" class="footer__social">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Discover</h4>
+          <a href="#">New Releases</a>
+          <a href="#">Films</a>
+          <a href="#">Series</a>
+          <a href="#">Top 10</a>
+          <a href="#">Genres</a>
+        </div>
+        <div class="footer__col">
+          <h4>Orbit</h4>
+          <a href="#">About</a>
+          <a href="#">Press</a>
+          <a href="#">Careers</a>
+          <a href="#">Investors</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer__col">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 ORBIT MEDIA INC.</span>
+      <span>MADE FOR THE WORLD · STREAMED AT THE SPEED OF LIGHT.</span>
+    </div>
+  </footer>
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" id="modalClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__hero">
+        <img class="modal__backdrop" id="modalBackdrop" src="" alt="" />
+        <div class="modal__backdrop-grad"></div>
+        <div class="modal__hero-content">
+          <span class="modal__badge" id="modalBadge"></span>
+          <h2 class="modal__title" id="modalTitle"></h2>
+          <div class="modal__meta" id="modalMeta"></div>
+          <div class="modal__actions">
+            <button class="btn btn--play">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="6,3 20,12 6,21"/></svg>
+              Play Now
+            </button>
+            <button class="btn btn--ghost modal__watchlist">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Watchlist
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="modal__poster-col">
+          <img class="modal__poster" id="modalPoster" src="" alt="" />
+        </div>
+        <div class="modal__info-col">
+          <p class="modal__desc" id="modalDesc"></p>
+          <div class="modal__details" id="modalDetails"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authOverlay" aria-hidden="true">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authHeading">
+
+      <!-- Close -->
+      <button class="auth-modal__close" id="authClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <div class="auth-modal__logo">
+        <span class="auth-logo-badge">
+          <span class="auth-logo-ring"></span>
+          <span class="auth-logo-text">ORBIT</span>
+        </span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="tabSignIn" role="tab" aria-selected="true"  aria-controls="panelSignIn">Sign In</button>
+        <button class="auth-tab"        id="tabSignUp" role="tab" aria-selected="false" aria-controls="panelSignUp">Create Account</button>
+        <div class="auth-tab__indicator" id="authTabIndicator"></div>
+      </div>
+
+      <!-- SIGN IN PANEL -->
+      <div class="auth-panel active" id="panelSignIn" role="tabpanel" aria-labelledby="tabSignIn">
+        <h2 class="auth-modal__heading" id="authHeading">Welcome back</h2>
+        <p class="auth-modal__sub">Sign in to continue watching.</p>
+
+        <form class="auth-form" id="signInForm" novalidate>
+          <div class="auth-field" id="siEmailField">
+            <label class="auth-label" for="siEmail">Email</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+              <input class="auth-input" id="siEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <span class="auth-error" id="siEmailErr"></span>
+          </div>
+
+          <div class="auth-field" id="siPassField">
+            <label class="auth-label" for="siPass">Password</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="auth-input" id="siPass" type="password" placeholder="••••••••" autocomplete="current-password" />
+              <button type="button" class="auth-eye" data-target="siPass" aria-label="Toggle password">
+                <svg class="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <span class="auth-error" id="siPassErr"></span>
+          </div>
+
+          <div class="auth-form__row">
+            <label class="auth-checkbox">
+              <input type="checkbox" id="siRemember" />
+              <span class="auth-checkbox__box"></span>
+              Remember me
+            </label>
+            <button type="button" class="auth-link" id="forgotPassBtn">Forgot password?</button>
+          </div>
+
+          <button type="submit" class="btn btn--primary auth-submit" id="signInSubmit">
+            <span class="auth-submit__text">Sign In</span>
+            <span class="auth-submit__spinner" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+
+          <div class="auth-divider"><span>or continue with</span></div>
+
+          <div class="auth-social-row">
+            <button type="button" class="auth-social-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Google
+            </button>
+            <button type="button" class="auth-social-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-3.313 2.16-5.065 4.337-5.065 1.47 0 2.697.97 3.635.97.814 0 2.088-1.02 3.772-1.02.717 0 2.73.07 4.137 2.08zm-7.42-13.09c-.48.64-1.38 1.17-2.31 1.13-.11-.71.25-1.44.68-1.94.49-.55 1.37-1.04 2.2-1.09.09.73-.19 1.48-.57 1.9z"/></svg>
+              Apple
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SIGN UP PANEL -->
+      <div class="auth-panel" id="panelSignUp" role="tabpanel" aria-labelledby="tabSignUp">
+        <h2 class="auth-modal__heading">Join Orbit</h2>
+        <p class="auth-modal__sub">Start streaming in seconds. No credit card needed.</p>
+
+        <form class="auth-form" id="signUpForm" novalidate>
+          <div class="auth-form__row auth-form__row--half">
+            <div class="auth-field">
+              <label class="auth-label" for="suFirst">First name</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input class="auth-input" id="suFirst" type="text" placeholder="Jane" autocomplete="given-name" />
+              </div>
+              <span class="auth-error" id="suFirstErr"></span>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="suLast">Last name</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input class="auth-input" id="suLast" type="text" placeholder="Doe" autocomplete="family-name" />
+              </div>
+              <span class="auth-error" id="suLastErr"></span>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="suEmail">Email</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+              <input class="auth-input" id="suEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <span class="auth-error" id="suEmailErr"></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="suPass">Password</label>
+            <div class="auth-input-wrap">
+              <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="auth-input" id="suPass" type="password" placeholder="Min. 8 characters" autocomplete="new-password" />
+              <button type="button" class="auth-eye" data-target="suPass" aria-label="Toggle password">
+                <svg class="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <span class="auth-error" id="suPassErr"></span>
+            <!-- password strength -->
+            <div class="pass-strength" id="passStrength">
+              <div class="pass-strength__bars">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <span class="pass-strength__label" id="passStrengthLabel"></span>
+            </div>
+          </div>
+
+          <label class="auth-checkbox">
+            <input type="checkbox" id="suTerms" />
+            <span class="auth-checkbox__box"></span>
+            I agree to the <button type="button" class="auth-link">Terms</button> and <button type="button" class="auth-link">Privacy Policy</button>
+          </label>
+          <span class="auth-error" id="suTermsErr"></span>
+
+          <button type="submit" class="btn btn--primary auth-submit" id="signUpSubmit">
+            <span class="auth-submit__text">Create Account</span>
+            <span class="auth-submit__spinner" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
